@@ -1,0 +1,50 @@
+<?php
+
+use JetBrains\PhpStorm\Pure;
+
+const CELL_UNREVEALED = -3;
+const CELL_FLAG = -2;
+const CELL_BOMB = -1;
+
+#[Pure] function get_cell_color(int $cell_value): string {
+    return match($cell_value) {
+        CELL_UNREVEALED => "white",
+        CELL_FLAG => "#99ff66",
+        CELL_BOMB => "#ff6699",
+        default => (function() use ($cell_value) {
+            $coefficient = 170 - 100 * $cell_value / 9;
+            return "rgb($coefficient, $coefficient, 240)";
+        })()
+    };
+}
+
+#[Pure] function create_unrevealed_cell_link(int $cell_number): string {
+    $touched = $_GET["touched"] ?? [];
+    $new_touched = [...$touched, $cell_number];
+    $new_get = [...$_GET, "touched" => $new_touched];
+    $new_get_query = http_build_query($new_get);
+    $old_base = $_SERVER["PHP_SELF"];
+    return "href='$old_base?$new_get_query'";
+}
+
+#[Pure] function create_cell(int $cell_number, int $cell_value): string {
+    $color = get_cell_color($cell_value);
+    $class = match($cell_value) {
+        CELL_UNREVEALED => "unrevealed",
+        CELL_FLAG => "flag",
+        CELL_BOMB => "bomb"
+    };
+    [$elem, $link] =
+        $cell_value === CELL_UNREVEALED
+            ? ["a", create_unrevealed_cell_link($cell_number)]
+            : ["div", ""];
+    $text =
+        ($cell_value > 0)
+            ? strval($cell_value)
+            : "";
+    return (
+        "<$elem $link class='cell $class' style='background: $color'>" .
+            $text .
+        "</$elem>"
+    );
+}
