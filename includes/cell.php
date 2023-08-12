@@ -31,14 +31,15 @@ const CELL_BOMB = -1;
     $color = get_cell_color($cell_value);
     $class = match($cell_value) {
         CELL_UNREVEALED => "unrevealed",
-        CELL_BOMB => "bomb"
+        CELL_BOMB => "bomb",
+        default => "revealed"
     };
     [$elem, $link] =
         $cell_value === CELL_UNREVEALED
             ? ["a", create_unrevealed_cell_link($cell_number)]
             : ["div", ""];
     $text =
-        ($cell_value > 0)
+        $cell_value > 0
             ? "$cell_value"
             : "";
     return (
