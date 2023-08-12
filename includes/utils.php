@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use JetBrains\PhpStorm\Pure;
 
 #[Pure] function arrange(int $start, int $end): array {
@@ -41,3 +43,4 @@ use JetBrains\PhpStorm\Pure;
         })()
     };
 }
+

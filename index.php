@@ -1,7 +1,4 @@
-<?php
-declare(strict_types=1);
-include_once("includes/board.php");
-?>
+<?php include_once("includes/render.php") ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,11 +10,10 @@ include_once("includes/board.php");
 <body>
 
 <main class="tic-tac-toe">
-    <?php
-    const CELL_COUNT = 100;
-    echo create_empty_real_board(CELL_COUNT);
-    ?>
+    <?= render_board() ?>
 </main>
+
+<h1><?= render_status() ?></h1>
 
 </body>
 </html>

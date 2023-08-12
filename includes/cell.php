@@ -1,15 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 use JetBrains\PhpStorm\Pure;
 
-const CELL_UNREVEALED = -3;
-const CELL_FLAG = -2;
+const CELL_UNREVEALED = -2;
 const CELL_BOMB = -1;
 
 #[Pure] function get_cell_color(int $cell_value): string {
     return match($cell_value) {
         CELL_UNREVEALED => "white",
-        CELL_FLAG => "#99ff66",
         CELL_BOMB => "#ff6699",
         default => (function() use ($cell_value) {
             $coefficient = 170 - 100 * $cell_value / 9;
@@ -31,7 +31,6 @@ const CELL_BOMB = -1;
     $color = get_cell_color($cell_value);
     $class = match($cell_value) {
         CELL_UNREVEALED => "unrevealed",
-        CELL_FLAG => "flag",
         CELL_BOMB => "bomb"
     };
     [$elem, $link] =
@@ -40,7 +39,7 @@ const CELL_BOMB = -1;
             : ["div", ""];
     $text =
         ($cell_value > 0)
-            ? strval($cell_value)
+            ? "$cell_value"
             : "";
     return (
         "<$elem $link class='cell $class' style='background: $color'>" .
