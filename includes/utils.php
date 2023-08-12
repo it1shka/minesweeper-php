@@ -13,10 +13,12 @@ function arrange(int $start, int $end): array {
     };
 }
 
-function flatten(array $original): array {
-    return array_reduce($original, function ($acc, $elem) {
+function flatten(array $original, bool $shallow = false): array {
+    return array_reduce($original, function ($acc, $elem) use ($shallow) {
         return match(gettype($elem)) {
-            "array" => [...$acc, ...flatten($elem)],
+            "array" => [...$acc, ...($shallow
+                ? $elem
+                : flatten($elem))],
             default => [...$acc, $elem]
         };
     }, []);
@@ -40,4 +42,11 @@ function array_foreach(array $original, callable $func): void {
     [$head, $tail] = [$original[0], array_slice($original, 1)];
     $func($head);
     array_foreach($tail, $func);
+}
+
+function cross_product(array $first, array $second): array {
+    $output = array_map(function ($a) use (&$second) {
+        return array_map(fn ($b) => [$a, $b], $second);
+    }, $first);
+    return flatten($output, true);
 }

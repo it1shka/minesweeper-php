@@ -11,8 +11,8 @@ const CELL_BOMB = -1;
     return match($cell_value) {
         CELL_UNREVEALED => "white",
         CELL_BOMB => "#ff6699",
-        default => (function() use ($cell_value) {
-            $coefficient = 170 - 100 * $cell_value / 9;
+        default => (#[Pure] function() use ($cell_value) {
+            $coefficient = 200 - 150 * $cell_value / 9;
             return "rgb($coefficient, $coefficient, 240)";
         })()
     };
