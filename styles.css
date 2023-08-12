@@ -32,4 +32,9 @@ body {
     font-size: 1.5em;
     display: grid;
     place-items: center;
+    transition: 0.1s transform ease-in-out;
+}
+
+.tic-tac-toe > .cell:hover {
+    transform: scale(1.2);
 }

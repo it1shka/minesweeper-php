@@ -8,7 +8,7 @@ include_once "board.php";
 
 const BOARD_SIZE = 10;
 const CELLS_COUNT = BOARD_SIZE * BOARD_SIZE;
-const BOMBS_AMOUNT = 20;
+const BOMBS_AMOUNT = 13;
 
 function render_board(): string {
     return match (isset($_GET["touched"])) {
@@ -23,7 +23,18 @@ function render_board(): string {
     };
 }
 
-#[Pure] function render_status(): string {
-    // TODO: implement rendering of status
-    return "TODO: Implement rendering of status";
+function render_status(): string {
+    if (!isset($_GET["touched"])) {
+        return "Start the game: press any cell!";
+    }
+
+    $failures = array_intersect($_GET["touched"], $_GET["bombs"]);
+    $abstract_board = create_abstract_board(BOARD_SIZE);
+    $unrevealed = array_filter($abstract_board, #[Pure] fn($cell) => $cell === CELL_UNREVEALED);
+
+    return match (true) {
+        count($failures) > 0 => "Well, you exploded " . count($failures) . " bombs",
+        count($unrevealed) === BOMBS_AMOUNT => "Well done! Now, just don't touch anything",
+        default => "Keep going, keep going..."
+    };
 }
